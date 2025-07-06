@@ -50,6 +50,9 @@ function LoginScreen() {
       footer={footerContent}
     >
       <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
+      <Link href="/(auth)/forgot-password" style={styles.forgotPasswordLink}>
+        <Text style={styles.linkText}>パスワードを忘れた場合</Text>
+      </Link>
     </FormLayout>
   );
 }
@@ -67,6 +70,10 @@ const styles = StyleSheet.create({
   linkText: {
     color: '#2196F3',
     fontWeight: 'bold',
+  },
+  forgotPasswordLink: {
+    textAlign: 'center',
+    marginTop: 16,
   },
 });
 
