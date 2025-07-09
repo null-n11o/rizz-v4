@@ -13,7 +13,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: Localization.locale.startsWith('ja') ? 'ja' : 'en',
+    lng: Localization.locale?.startsWith('ja') ? 'ja' : 'en',
     fallbackLng: 'ja',
     interpolation: {
       escapeValue: false,

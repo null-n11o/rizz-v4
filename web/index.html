@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  
+  <!-- Font optimization to prevent timeout errors -->
+  <style>
+    /* Configure font loading with swap display to prevent timeouts */
+    @font-face {
+      font-family: 'MaterialIcons';
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'SpaceMono';
+      font-display: swap;
+    }
+    
+    /* Override fontfaceobserver timeout */
+    .fontfaceobserver {
+      font-display: swap;
+    }
+  </style>
+  
+  <!-- Override fontfaceobserver timeout -->
+  <script>
+    // Increase fontfaceobserver timeout and make it more lenient
+    if (typeof window !== 'undefined') {
+      window.addEventListener('DOMContentLoaded', function() {
+        // Override the default timeout
+        if (window.FontFaceObserver) {
+          const originalLoad = window.FontFaceObserver.prototype.load;
+          window.FontFaceObserver.prototype.load = function(testString, timeout) {
+            // Increase timeout to 30 seconds and make it more lenient
+            return originalLoad.call(this, testString, timeout || 30000);
+          };
+        }
+        
+        // Fallback: prevent font loading from blocking UI
+        const style = document.createElement('style');
+        style.textContent = `
+          * {
+            font-display: swap !important;
+          }
+        `;
+        document.head.appendChild(style);
+      });
+    }
+  </script>
+  
+  <title>Rizz App</title>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html> 

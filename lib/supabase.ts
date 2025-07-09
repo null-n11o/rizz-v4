@@ -1,5 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import 'react-native-url-polyfill/auto';
 import { getEnv, logAllEnv } from './env';
 
@@ -23,19 +22,37 @@ console.log('Supabase configuration:');
 console.log('使用するSupabase URL:', actualUrl);
 console.log('使用するSupabase Anon Key exists:', !!actualAnonKey);
 
-// Supabaseクライアントのオプション
-const supabaseOptions = {
-  auth: {
-    storage: AsyncStorage,
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: false,
-  },
-};
+let supabase: SupabaseClient | null = null;
 
-// Supabaseクライアントを初期化して公開
-export const supabase = createClient(
-  actualUrl,
-  actualAnonKey,
-  supabaseOptions
-);
+export function getSupabaseClient(): SupabaseClient {
+  if (supabase) return supabase;
+
+  let supabaseOptions: any = {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: false,
+    },
+  };
+
+  // Platform detection at runtime, safe for SSR/static
+  if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
+    // Web
+    supabaseOptions.auth.storage = window.localStorage;
+    supabaseOptions.auth.detectSessionInUrl = true;
+  } else {
+    // Native (or Node.js)
+    try {
+      // Only require AsyncStorage if available
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+      supabaseOptions.auth.storage = AsyncStorage;
+    } catch (e) {
+      // Fallback: no storage (SSR/static export)
+      supabaseOptions.auth.storage = undefined;
+    }
+  }
+
+  supabase = createClient(actualUrl, actualAnonKey, supabaseOptions);
+  return supabase;
+}

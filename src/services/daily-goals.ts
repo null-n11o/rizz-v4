@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { getSupabaseClient } from '@/lib/supabase';
 
 export interface DailyGoal {
   id: string;
@@ -22,6 +22,7 @@ export interface UpsertDailyGoalParams {
 
 // 日次目標の取得
 export const getDailyGoal = async (date: string) => {
+  const supabase = getSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return { data: null, error: new Error('ユーザーが認証されていません') };
@@ -39,6 +40,7 @@ export const getDailyGoal = async (date: string) => {
 
 // 日次目標の作成・更新
 export const upsertDailyGoal = async (params: UpsertDailyGoalParams) => {
+  const supabase = getSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return { data: null, error: new Error('ユーザーが認証されていません') };
@@ -94,6 +96,7 @@ export const upsertDailyGoal = async (params: UpsertDailyGoalParams) => {
 
 // 日次目標の削除
 export const deleteDailyGoal = async (date: string) => {
+  const supabase = getSupabaseClient();
   const { error } = await supabase
     .from('daily_goals')
     .delete()
@@ -104,6 +107,7 @@ export const deleteDailyGoal = async (date: string) => {
 
 // 日付範囲での日次目標の取得
 export const getDailyGoalsByDateRange = async (startDate: string, endDate: string) => {
+  const supabase = getSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return { data: null, error: new Error('ユーザーが認証されていません') };
