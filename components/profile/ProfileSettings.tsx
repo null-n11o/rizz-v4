@@ -10,32 +10,21 @@ import { useTranslation } from 'react-i18next';
 import i18n from '../../src/libs/i18n';
 
 export const ProfileSettings: React.FC = () => {
+  // ALL HOOKS MUST BE CALLED FIRST - before any early returns
   const { profile, updateProfile, changePassword, updateTheme, loading, error } = useProfile();
+  const { t } = useTranslation();
+  
   // profile?.languageがnullの場合にデフォルト値0(日本語)を設定
   const [language, setLanguage] = useState(profile?.language ?? 0);
-  // profileが更新されたらlanguage stateも更新
-  React.useEffect(() => {
-    setLanguage(profile?.language ?? 0);
-  }, [profile?.language]);
-
-
-  const { t } = useTranslation();
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [themeUpdating, setThemeUpdating] = useState(false);
   const [languageUpdating, setLanguageUpdating] = useState(false);
 
-  // 初回ロード時、またはprofileがまだロードされていない場合はローディング表示
-  if (loading && !profile) {
-    return (
-      <View style={styles.container}>
-        <ThemedText>{t('loading')}</ThemedText>
-      </View>
-    );
-  }
-
-  // デバッグ用: 現在のi18n.languageとprofile.languageを出力
-  console.log('i18n.language:', i18n.language, 'profile.language:', profile?.language);
+  // profileが更新されたらlanguage stateも更新
+  React.useEffect(() => {
+    setLanguage(profile?.language ?? 0);
+  }, [profile?.language]);
 
   // ProfileSchemaの定義をuseMemoでラップし、言語切り替え時に再生成されるようにする
   // tを依存配列に入れることで、言語切り替え時にバリデーションメッセージも更新される
@@ -109,10 +98,15 @@ export const ProfileSettings: React.FC = () => {
       await updateTheme(newTheme);
       setSnackbarMessage(t('theme_change_success'));
       setSnackbarVisible(true);
-      // 変更が反映されるようにリロード
-      setTimeout(async () => {
-        await Updates.reloadAsync();
-      }, 500);
+      
+      // Only reload in production builds, not in development
+      if (__DEV__ === false) {
+        setTimeout(async () => {
+          await Updates.reloadAsync();
+        }, 500);
+      } else {
+        console.log('Theme changed in development mode - no reload needed');
+      }
     } catch (e: any) {
       setSnackbarMessage(t('theme_change_failed'));
       setSnackbarVisible(true);
@@ -135,9 +129,15 @@ export const ProfileSettings: React.FC = () => {
 
       setSnackbarMessage(t('language_change_success'));
       setSnackbarVisible(true);
-      setTimeout(async () => {
-        await Updates.reloadAsync(); // アプリ全体に反映するためリロード
-      }, 500);
+      
+      // Only reload in production builds, not in development
+      if (__DEV__ === false) {
+        setTimeout(async () => {
+          await Updates.reloadAsync(); // アプリ全体に反映するためリロード
+        }, 500);
+      } else {
+        console.log('Language changed in development mode - no reload needed');
+      }
     } catch (e: any) {
       setSnackbarMessage(t('language_change_failed'));
       setSnackbarVisible(true);
@@ -145,6 +145,19 @@ export const ProfileSettings: React.FC = () => {
       setLanguageUpdating(false);
     }
   };
+
+  // デバッグ用: 現在のi18n.languageとprofile.languageを出力
+  console.log('i18n.language:', i18n.language, 'profile.language:', profile?.language);
+
+  // NOW handle conditional rendering AFTER all hooks are called
+  // 初回ロード時、またはprofileがまだロードされていない場合はローディング表示
+  if (loading && !profile) {
+    return (
+      <View style={styles.container}>
+        <ThemedText>{t('loading')}</ThemedText>
+      </View>
+    );
+  }
 
   if (error) {
     return (

@@ -20,6 +20,23 @@ import { ProfileProvider } from '@/contexts/ProfileContext';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+// Web font optimization to prevent timeout errors
+if (typeof window !== 'undefined') {
+  // Configure fontfaceobserver timeout for web
+  const style = document.createElement('style');
+  style.textContent = `
+    @font-face {
+      font-family: 'MaterialIcons';
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'SpaceMono';
+      font-display: swap;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 // 認証状態によるリダイレクトを行うコンポーネント
 function AuthRedirect() {
   const { user, isLoading } = useAuth();
@@ -63,40 +80,50 @@ function RootLayout() {
   });
 
   // React Navigation用のテーマとReact Native Paper用のテーマを結合
-  const combinedDefaultTheme = {
+  // Use React.useMemo to prevent theme recreation that triggers font reloading
+  const combinedDefaultTheme = React.useMemo(() => ({
     ...DefaultTheme,
     ...PaperDefaultTheme,
     colors: {
       ...DefaultTheme.colors,
       ...PaperDefaultTheme.colors,
     },
-  };
+  }), []);
 
-  const combinedDarkTheme = {
+  const combinedDarkTheme = React.useMemo(() => ({
     ...DarkTheme,
     ...PaperDarkTheme,
     colors: {
       ...DarkTheme.colors,
       ...PaperDarkTheme.colors,
     },
-  };
+  }), []);
 
   // 現在のカラースキームに基づくテーマを選択
-  const theme = colorScheme === 'dark' ? combinedDarkTheme : combinedDefaultTheme;
+  const theme = React.useMemo(() => 
+    colorScheme === 'dark' ? combinedDarkTheme : combinedDefaultTheme,
+    [colorScheme, combinedDarkTheme, combinedDefaultTheme]
+  );
 
   // ProfileProvider配下でのみuseProfileが使えるため、useProfileをimportし、profile.languageでi18nを切り替え
   // ただし、useProfileはProfileProvider配下でしか呼べないため、ProfileProviderの子でラップする必要がある
   // そのため、ProfileProvider配下でラッパーを作成
 
-  function I18nLanguageSync({ children }: { children: React.ReactNode }) {
+  const I18nLanguageSync = React.memo(({ children }: { children: React.ReactNode }) => {
     const { profile } = require('@/contexts/ProfileContext').useProfile();
+    
     React.useEffect(() => {
       if (profile && typeof profile.language === 'number') {
-        i18n.changeLanguage(profile.language === 0 ? 'ja' : 'en');
+        const newLangCode = profile.language === 0 ? 'ja' : 'en';
+        // Only change language if it's different to prevent unnecessary re-renders
+        if (i18n.language !== newLangCode) {
+          i18n.changeLanguage(newLangCode);
+        }
       }
     }, [profile?.language]);
+    
     return children;
-  }
+  });
 
   useEffect(() => {
     if (loaded) {

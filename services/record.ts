@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { getSupabaseClient } from '@/lib/supabase';
 import { CounterType } from '@/lib/types/record';
 
 // Supabaseデータベースの日次記録型
@@ -46,6 +46,7 @@ type Response<T> = SuccessResponse<T> | FailureResponse;
 export const getDailyRecord = async (date: string): Promise<Response<DailyRecordData | null>> => {
   try {
     // ユーザーIDを取得
+    const supabase = getSupabaseClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       return {
@@ -137,6 +138,7 @@ export const upsertDailyRecord = async (recordData: Partial<DailyRecordData>): P
   console.log('upsertDailyRecord - 開始', recordData);
   try {
     // ユーザーIDを取得
+    const supabase = getSupabaseClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       return {
@@ -269,6 +271,7 @@ export const incrementCounter = async (
 ): Promise<Response<DailyRecordData>> => {
   try {
     // ユーザーIDを取得
+    const supabase = getSupabaseClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       return {
@@ -417,6 +420,7 @@ export const getDailyRecords = async (
 ): Promise<Response<DailyRecordData[]>> => {
   try {
     // ユーザーIDを取得
+    const supabase = getSupabaseClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       return {
@@ -480,6 +484,7 @@ export const getDailyRecords = async (
 export const deleteDailyRecord = async (date: string): Promise<Response<null>> => {
   try {
     // ユーザーIDを取得
+    const supabase = getSupabaseClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       return {

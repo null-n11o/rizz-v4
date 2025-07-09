@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { Session, User } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
+import { getSupabaseClient } from '../lib/supabase';
 import * as authService from '../lib/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -91,6 +91,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     loadSession();
 
     // セッション変更監視
+    const supabase = getSupabaseClient();
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event);

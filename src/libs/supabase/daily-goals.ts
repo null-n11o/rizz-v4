@@ -1,7 +1,8 @@
-import { Database } from '@/types/database.types'
-import { createClient } from '@/utils/supabase/client'
+import { Database } from '../../types/database.types'
+import { getSupabaseClient } from '@/lib/supabase'
 
-const supabase = createClient()
+// Use the centralized Supabase client
+const supabase = getSupabaseClient()
 
 type DailyGoal = Database['public']['Tables']['daily_goals']['Row']
 type InsertDailyGoal = Database['public']['Tables']['daily_goals']['Insert']

@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { getSupabaseClient } from '@/lib/supabase';
 import { PeriodType } from '../types/goal';
 
 // 目標データのインターフェース
@@ -18,6 +18,7 @@ export interface GoalData {
 export const getGoal = async (userId: string, period: PeriodType) => {
   console.log(`getGoal呼び出し: userId=${userId}, period=${period}`);
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('goals')
       .select('*')
@@ -37,6 +38,7 @@ export const getGoal = async (userId: string, period: PeriodType) => {
 export const getAllGoals = async (userId: string) => {
   console.log(`getAllGoals呼び出し: userId=${userId}`);
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('goals')
       .select('*')
@@ -55,8 +57,9 @@ export const upsertGoal = async (goalData: GoalData) => {
   console.log('upsertGoal呼び出し:', goalData);
   try {
     // supabaseクライアントのログ
-    console.log('supabaseクライアントの状態:', supabase);
+    console.log('supabaseクライアントの状態:', getSupabaseClient());
     
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('goals')
       .upsert(goalData, { 
@@ -77,6 +80,7 @@ export const upsertGoal = async (goalData: GoalData) => {
 // 目標を削除
 export const deleteGoal = async (goalId: string) => {
   try {
+    const supabase = getSupabaseClient();
     const { error } = await supabase
       .from('goals')
       .delete()
@@ -94,6 +98,7 @@ export const debugGoals = async () => {
   console.log('デバッグ用目標値取得開始');
   try {
     // goalsテーブルの構造を確認
+    const supabase = getSupabaseClient();
     const { data: tableInfo, error: tableError } = await supabase
       .from('goals')
       .select('*')
@@ -129,6 +134,7 @@ export const insertTestGoal = async (userId: string) => {
   };
   
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('goals')
       .insert(testData)

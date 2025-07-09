@@ -1,9 +1,10 @@
-import { supabase } from './supabase';
+import { getSupabaseClient } from './supabase';
 
 /**
  * ユーザーをメールアドレスとパスワードで登録
  */
 export async function signUp(email: string, password: string, name: string) {
+  const supabase = getSupabaseClient();
   try {
     // サインアップ時にメール認証をスキップするためのオプション
     const { data, error } = await supabase.auth.signUp({
@@ -42,34 +43,9 @@ export async function signUp(email: string, password: string, name: string) {
         console.warn('プロフィール保存例外:', profileErr);
         // プロフィール保存例外は無視して続行
       }
-
-      // サインアップ後、すぐにログインを試みる
-      if (!data.session) {
-        console.log('セッションが取得できなかったため、明示的にログインを試みます');
-        try {
-          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-          });
-
-          if (signInError) {
-            console.warn('自動ログイン試行エラー:', signInError);
-          } else {
-            console.log('サインアップ後の自動ログインに成功しました');
-            return { user: signInData.user, session: signInData.session, error: null };
-          }
-        } catch (signInErr) {
-          console.warn('自動ログイン例外:', signInErr);
-          // 自動ログイン失敗は無視して続行
-        }
-      }
     }
-
     return { user: data.user, session: data.session, error: null };
   } catch (error) {
-    // エラーメッセージを取得して表示
-    const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
-    console.error('サインアップエラー:', errorMessage);
     return { user: null, session: null, error };
   }
 }
@@ -78,6 +54,7 @@ export async function signUp(email: string, password: string, name: string) {
  * ユーザーをメールアドレスとパスワードでログイン
  */
 export async function signIn(email: string, password: string) {
+  const supabase = getSupabaseClient();
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -95,15 +72,15 @@ export async function signIn(email: string, password: string) {
 }
 
 /**
- * 現在のセッションからユーザーをログアウト
+ * ユーザーをサインアウト
  */
 export async function signOut() {
+  const supabase = getSupabaseClient();
   try {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     return { error: null };
   } catch (error) {
-    console.error('ログアウトエラー:', error);
     return { error };
   }
 }
@@ -112,28 +89,28 @@ export async function signOut() {
  * 現在のセッション情報を取得
  */
 export async function getSession() {
+  const supabase = getSupabaseClient();
   try {
     const { data, error } = await supabase.auth.getSession();
     if (error) throw error;
     return { session: data.session, error: null };
   } catch (error) {
-    console.error('セッション取得エラー:', error);
     return { session: null, error };
   }
 }
 
 /**
- * パスワードリセットのためのメールを送信
+ * パスワードリセットメールを送信
  */
-export async function resetPassword(email: string) {
+export async function resetPassword(email: string): Promise<{ error: Error | null }> {
+  const supabase = getSupabaseClient();
   try {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'rizz://reset-password',
+      redirectTo: undefined,
     });
     if (error) throw error;
     return { error: null };
   } catch (error) {
-    console.error('パスワードリセットエラー:', error);
-    return { error };
+    return { error: error instanceof Error ? error : new Error(String(error)) };
   }
 }

@@ -1,9 +1,10 @@
-import { supabase } from '../lib/supabase';
+import { getSupabaseClient } from '../lib/supabase';
 import { Profile, ProfileUpdateData } from '../src/types/profile';
 
 // プロフィール情報を取得
 export const getProfile = async (): Promise<Profile | null> => {
   try {
+    const supabase = getSupabaseClient();
     const { data: user } = await supabase.auth.getUser();
     
     if (!user || !user.user) {
@@ -42,6 +43,7 @@ export const getProfile = async (): Promise<Profile | null> => {
 // プロフィール情報を更新
 export const updateProfile = async (profileData: ProfileUpdateData): Promise<Profile> => {
   try {
+    const supabase = getSupabaseClient();
     const { data: user } = await supabase.auth.getUser();
     
     if (!user || !user.user) {
@@ -80,6 +82,7 @@ export const updateProfile = async (profileData: ProfileUpdateData): Promise<Pro
 // パスワード変更
 export const changePassword = async (currentPassword: string, newPassword: string): Promise<void> => {
   try {
+    const supabase = getSupabaseClient();
     // 現在のパスワードを検証（サインインを試みる）
     const { data: user } = await supabase.auth.getUser();
     

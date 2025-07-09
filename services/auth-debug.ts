@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { getSupabaseClient } from '@/lib/supabase';
 
 /**
  * 認証情報とプロファイルの関連をデバッグする関数
@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
 export const debugAuthAndProfile = async () => {
   try {
     // 認証ユーザー情報を取得
+    const supabase = getSupabaseClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     
     if (authError || !user) {
