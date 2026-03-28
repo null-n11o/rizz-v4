@@ -45,5 +45,66 @@
   "new_password_rule": "New password must be at least 8 characters and include uppercase, lowercase, number, and symbol",
   "passwords_must_match": "Passwords must match",
   "profile_update_success": "Profile updated successfully",
-  "profile_update_failed": "Failed to update profile"
+  "profile_update_failed": "Failed to update profile",
+  "statistics": {
+    "title": "Statistics",
+    "period": {
+      "label": "Period",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "metrics": {
+      "approached": "Approached",
+      "contactRate": "Contact Rate",
+      "cvRate": "Close Rate"
+    },
+    "noData": "No data available",
+    "loading": "Loading data..."
+  },
+  "home": {
+    "gameArea": {
+      "label": "Location",
+      "placeholder": "Enter location (e.g. Shibuya)"
+    },
+    "gameTime": {
+      "label": "Time Slot",
+      "placeholder": "Select time slot",
+      "presets": {
+        "morning": "Morning",
+        "noon": "Noon",
+        "evening": "Evening",
+        "night": "Night",
+        "custom": "Custom"
+      }
+    }
+  },
+  "auth": {
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "description": "Enter your registered email address",
+      "emailPlaceholder": "Enter your email",
+      "submitButton": "Send Reset Email",
+      "successMessage": "Password reset email has been sent",
+      "backToLogin": "Back to Login"
+    },
+    "resetPassword": {
+      "title": "Set New Password",
+      "newPasswordLabel": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmPasswordLabel": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter password",
+      "submitButton": "Update Password",
+      "successMessage": "Password has been updated"
+    },
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordMismatch": "Passwords do not match",
+      "confirmPasswordRequired": "Please confirm your password"
+    }
+  }
 }

@@ -45,5 +45,66 @@
   "new_password_rule": "新しいパスワードは8文字以上、大文字・小文字・数字・記号を含めてください",
   "passwords_must_match": "パスワードが一致しません",
   "profile_update_success": "プロフィールを更新しました",
-  "profile_update_failed": "プロフィールの更新に失敗しました"
+  "profile_update_failed": "プロフィールの更新に失敗しました",
+  "statistics": {
+    "title": "統計",
+    "period": {
+      "label": "期間",
+      "daily": "日次",
+      "weekly": "週次",
+      "monthly": "月次",
+      "yearly": "年次"
+    },
+    "metrics": {
+      "approached": "声かけ数",
+      "contactRate": "連絡先率",
+      "cvRate": "即率"
+    },
+    "noData": "データがありません",
+    "loading": "データを読み込み中..."
+  },
+  "home": {
+    "gameArea": {
+      "label": "場所",
+      "placeholder": "場所を入力（例: 渋谷）"
+    },
+    "gameTime": {
+      "label": "時間帯",
+      "placeholder": "時間帯を選択",
+      "presets": {
+        "morning": "午前",
+        "noon": "昼",
+        "evening": "夕方",
+        "night": "夜",
+        "custom": "カスタム"
+      }
+    }
+  },
+  "auth": {
+    "forgotPassword": {
+      "title": "パスワードをお忘れの方",
+      "description": "登録済みのメールアドレスを入力してください",
+      "emailPlaceholder": "メールアドレスを入力",
+      "submitButton": "リセットメールを送信",
+      "successMessage": "パスワードリセットメールを送信しました",
+      "backToLogin": "ログイン画面に戻る"
+    },
+    "resetPassword": {
+      "title": "新しいパスワードの設定",
+      "newPasswordLabel": "新しいパスワード",
+      "newPasswordPlaceholder": "新しいパスワードを入力",
+      "confirmPasswordLabel": "パスワード（確認）",
+      "confirmPasswordPlaceholder": "パスワードを再入力",
+      "submitButton": "パスワードを更新",
+      "successMessage": "パスワードを更新しました"
+    },
+    "validation": {
+      "emailRequired": "メールアドレスは必須です",
+      "emailInvalid": "有効なメールアドレスを入力してください",
+      "passwordRequired": "パスワードは必須です",
+      "passwordMinLength": "パスワードは8文字以上で入力してください",
+      "passwordMismatch": "パスワードが一致しません",
+      "confirmPasswordRequired": "確認用パスワードは必須です"
+    }
+  }
 }
