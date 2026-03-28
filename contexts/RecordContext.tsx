@@ -7,9 +7,9 @@ import * as recordService from '@/services/record';
 import { DailyRecordData } from '@/services/record';
 
 // AsyncStorageのキー
-const OFFLINE_QUEUE_KEY = 'rizz_offline_queue';
-const DAILY_RECORDS_CACHE_KEY = 'rizz_daily_records_cache';
-const COUNTERS_STORAGE_KEY = 'rizz_counters_storage';
+const OFFLINE_QUEUE_KEY = '@rizz/offline_queue';
+const DAILY_RECORDS_CACHE_KEY = '@rizz/daily_records_cache';
+const COUNTERS_STORAGE_KEY = '@rizz/counters_storage';
 
 // 変更キューアイテムの型
 interface ChangeQueueItem {
