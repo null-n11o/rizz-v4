@@ -16,6 +16,8 @@ import { RecordProvider } from '@/contexts/RecordContext';
 import { GoalProvider } from '@/contexts/GoalContext';
 import { CounterProvider } from '@/contexts/CounterContext';
 import { ProfileProvider } from '@/contexts/ProfileContext';
+import { SessionProvider } from '@/contexts/SessionContext';
+import { GRMProvider } from '@/contexts/GRMContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -115,18 +117,22 @@ function RootLayout() {
           <CounterProvider>
             <RecordProvider>
               <GoalProvider>
-                <PaperProvider theme={theme}>
-                  <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-                    {/* AuthRedirectコンポーネントを有効化 */}
-                    <AuthRedirect />
-                    <Stack initialRouteName="(auth)">
-                      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                      <Stack.Screen name="+not-found" />
-                    </Stack>
-                    <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-                  </ThemeProvider>
-                </PaperProvider>
+                <SessionProvider>
+                  <GRMProvider>
+                    <PaperProvider theme={theme}>
+                      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+                        {/* AuthRedirectコンポーネントを有効化 */}
+                        <AuthRedirect />
+                        <Stack initialRouteName="(auth)">
+                          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                          <Stack.Screen name="+not-found" />
+                        </Stack>
+                        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+                      </ThemeProvider>
+                    </PaperProvider>
+                  </GRMProvider>
+                </SessionProvider>
               </GoalProvider>
             </RecordProvider>
           </CounterProvider>
