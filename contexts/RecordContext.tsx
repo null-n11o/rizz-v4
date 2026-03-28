@@ -28,6 +28,8 @@ interface RecordContextType {
   isOnline: boolean;
   fetchDailyRecord: (date: string) => Promise<DailyRecordData | null>;
   incrementCounter: (type: CounterType, date: string, count?: number) => Promise<void>;
+  updateGameArea: (area: string) => Promise<void>;
+  updateGameTime: (time: string | null) => Promise<void>;
   syncOfflineChanges: () => Promise<void>;
   getOfflineChangeCount: () => Promise<number>;
 }
@@ -321,6 +323,18 @@ export function RecordProvider({ children }: { children: React.ReactNode }) {
     }
   }, [isOnline, incrementCounterLocal, addToChangeQueue, dailyRecords, updateCache]);
 
+  // game_area を更新
+  const updateGameArea = useCallback(async (area: string) => {
+    const today = new Date().toISOString().split('T')[0];
+    await recordService.upsertDailyRecord({ game_date: today, game_area: area });
+  }, []);
+
+  // game_time を更新
+  const updateGameTime = useCallback(async (time: string | null) => {
+    const today = new Date().toISOString().split('T')[0];
+    await recordService.upsertDailyRecord({ game_date: today, game_time: time ?? undefined });
+  }, []);
+
   // コンテキストの値
   const value = {
     dailyRecords,
@@ -329,6 +343,8 @@ export function RecordProvider({ children }: { children: React.ReactNode }) {
     isOnline,
     fetchDailyRecord,
     incrementCounter,
+    updateGameArea,
+    updateGameTime,
     syncOfflineChanges,
     getOfflineChangeCount
   };

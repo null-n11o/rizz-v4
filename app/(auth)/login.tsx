@@ -36,6 +36,10 @@ function LoginScreen() {
 
   const footerContent = (
     <View style={styles.footer}>
+      <Link href="/(auth)/forgot-password" asChild>
+        <Text style={styles.linkText}>パスワードを忘れた方</Text>
+      </Link>
+      <Text style={styles.separator}> | </Text>
       <Text style={styles.footerText}>アカウントをお持ちでないですか？</Text>
       <Link href="/signup" asChild>
         <Text style={styles.linkText}>新規登録</Text>
@@ -59,13 +63,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    flexWrap: 'wrap',
     padding: 16,
+    gap: 4,
   },
   footerText: {
-    marginRight: 8,
+    marginRight: 4,
+  },
+  separator: {
+    color: '#6B7280',
   },
   linkText: {
-    color: '#2196F3',
+    color: '#C09E5C',
     fontWeight: 'bold',
   },
 });
