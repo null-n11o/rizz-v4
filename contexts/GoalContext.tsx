@@ -28,7 +28,7 @@ export interface GoalContextType {
   syncGoals: () => Promise<void>;
 }
 
-const GOALS_STORAGE_KEY = '@rizz_goals';
+const GOALS_STORAGE_KEY = '@rizz/goals';
 
 // デフォルトの目標値
 const getDefaultGoalValues = (period: PeriodType, date?: string): GoalValues => ({
@@ -52,7 +52,7 @@ const GoalContext = createContext<GoalContextType | undefined>(undefined);
 
 // オフライン変更キューを取得
 const getGoalChangeQueue = async () => {
-  const queueStr = await AsyncStorage.getItem('offlineGoalChangeQueue');
+  const queueStr = await AsyncStorage.getItem('@rizz/offline_goal_change_queue');
   return queueStr ? JSON.parse(queueStr) : [];
 };
 
@@ -76,7 +76,7 @@ const addToGoalChangeQueue = async (period: PeriodType, data: Partial<GoalValues
     });
   }
 
-  await AsyncStorage.setItem('offlineGoalChangeQueue', JSON.stringify(queue));
+  await AsyncStorage.setItem('@rizz/offline_goal_change_queue', JSON.stringify(queue));
 };
 
 export const GoalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -186,7 +186,7 @@ export const GoalProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     if (success) {
-      await AsyncStorage.removeItem('offlineGoalChangeQueue');
+      await AsyncStorage.removeItem('@rizz/offline_goal_change_queue');
     }
   };
 
